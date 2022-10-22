@@ -32,6 +32,7 @@ def runtransaction(players):
     while(P2==P1):
         P2 = random.choice(players)
     if random.randint(0,1):
+        pass
 
 def main():
     generateplayers()
