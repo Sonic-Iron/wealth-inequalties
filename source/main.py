@@ -56,7 +56,7 @@ def run_round(players, large_bias, small_wager, large_wager):
         players_temp.remove(p1)
         players_temp.remove(p2)
         print(len(players_temp))
-        if np.random.binomial(1, large_bias):
+        if np.random.binomial(1, 0.5 + large_bias):
             # the wealthier player wins
             if p1.get_wealth() >= p2.get_wealth():
                 p1.win(p2.get_wealth()*small_wager)
@@ -81,7 +81,7 @@ def main():
     num_rounds = 10000
     large_wager = 0.2
     small_wager = 0.17
-    large_bias = 0.5 + 0.01
+    large_bias = 0.01
     starting_wealth = 200
 
     players = generate_players(num_players, starting_wealth)
@@ -93,8 +93,6 @@ def main():
         for a in players:
             total_wealth += a.get_wealth()
         print(total_wealth)
-
-# TODO: work out why the wealth drops over rounds
 
 if __name__ == "__main__":
     main()
