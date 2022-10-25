@@ -95,5 +95,6 @@ def main():
         print(total_wealth)
 
 
+
 if __name__ == "__main__":
     main()
