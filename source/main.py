@@ -94,7 +94,7 @@ def main():
             total_wealth += a.get_wealth()
         print(total_wealth)
 
-
+# TODO: work out why the wealth drops over rounds
 
 if __name__ == "__main__":
     main()
