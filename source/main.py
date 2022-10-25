@@ -5,6 +5,7 @@ from decimal import Decimal
 import random
 import numpy as np
 
+
 class Player:
     """
     Represents a player, all values of wealth inside are decimal and returns Decimal type to outside the instance
@@ -18,19 +19,21 @@ class Player:
 
     def get_wealth(self):
         """
+        Returns the wealth Decimal value of this player
         :return: floating point representation of the wealth of the player
         """
         return self._wealth
 
     def lose(self, loss):
         """
+        Gives a loss of wealth to this player
         :param loss: how much wealth was lost
         """
         self._wealth -= Decimal(loss)
 
     def win(self, gain):
         """
-        :param gain: how much wealth was won
+        param gain: how much wealth was won
         """
         self._wealth += Decimal(gain)
 
@@ -74,6 +77,7 @@ def run_round(players, large_bias, small_wager, large_wager):
             else:
                 p1.win(p1.get_wealth()*Decimal(large_wager))
                 p2.lose(p1.get_wealth()*Decimal(large_wager))
+
 
 def main():
     """
