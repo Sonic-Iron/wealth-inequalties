@@ -2,6 +2,7 @@
 Runs a yard sale simulation
 """
 import random
+import numpy as np
 
 
 class Player:
@@ -43,9 +44,17 @@ def run_round(players):
     Run a round of the game
     :param players: the list of players, len >= 2
     """
-    p1, p2 = random.sample(players, 2)
+    players_temp = players
+    for _ in range(len(players)):
+        p1, p2 = random.sample(players_temp, 2)
+        players_temp.remove(p1)
+        players_temp.remove(p2)
 
-    # TODO: replace with random distribution code
+
+
+
+
+
 
 
 def main():
