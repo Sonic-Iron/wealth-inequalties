@@ -7,7 +7,7 @@ import numpy as np
 
 class Player:
     """
-    Represents a player, all values of wealth inside are decimal and returns floating point type to outside the instance
+    Represents a player, all values of wealth inside are decimal and returns Decimal type to outside the instance
     """
     def __init__(self, wealth):
         """
@@ -20,7 +20,7 @@ class Player:
         """
         :return: floating point representation of the wealth of the player
         """
-        return float(self._wealth)
+        return self._wealth
 
     def lose(self, loss):
         """
@@ -61,26 +61,26 @@ def run_round(players, large_bias, small_wager, large_wager):
         if np.random.binomial(1, 0.5 + large_bias):
             # the wealthier player wins
             if p1.get_wealth() >= p2.get_wealth():
-                p1.win(p2.get_wealth()*small_wager)
-                p2.lose(p2.get_wealth()*small_wager)
+                p1.win(p2.get_wealth()*Decimal(small_wager))
+                p2.lose(p2.get_wealth()*Decimal(small_wager))
             else:
-                p2.win(p1.get_wealth()*large_wager)
-                p1.lose(p1.get_wealth()*large_wager)
+                p2.win(p1.get_wealth()*Decimal(small_wager))
+                p1.lose(p1.get_wealth()*Decimal(small_wager))
         else:
             # the poorer player wins
             if p1.get_wealth() >= p2.get_wealth():
-                p1.lose(p2.get_wealth()*large_wager)
-                p2.win(p2.get_wealth()*large_wager)
+                p1.lose(p2.get_wealth()*Decimal(large_wager))
+                p2.win(p2.get_wealth()*Decimal(large_wager))
             else:
-                p1.win(p1.get_wealth()*large_wager)
-                p2.lose(p1.get_wealth()*large_wager)
+                p1.win(p1.get_wealth()*Decimal(large_wager))
+                p2.lose(p1.get_wealth()*Decimal(large_wager))
 
 def main():
     """
     Runs the game
     """
     num_players = 2
-    num_rounds = 10000
+    num_rounds = 1000000
     large_wager = 0.2
     small_wager = 0.17
     large_bias = 0.01
@@ -93,7 +93,7 @@ def main():
         total_wealth = 0
         for b in players:
             total_wealth += b.get_wealth()
-        print("round", a, total_wealth)
+        print("round", a, players[0].get_wealth(), players[1].get_wealth(), total_wealth)
 
 
 if __name__ == "__main__":
