@@ -1,8 +1,9 @@
 """
 Runs a yard sale simulation
 """
+import csv
+import os
 import numpy as np
-import csv, os
 
 
 class Player:
@@ -30,7 +31,8 @@ def generate_players(count, wealth):
 def run_round(p1, p2, large_bias, small_wager, large_wager):
     """
     Run a round of the game
-    :param p1: the list of players, len >= 2
+    :param p1: the first player in the transaction
+    :param p2: the second player in the transaction
     :param large_bias: The percent of time the wealthier player will win
     :param small_wager: The percent won/lost when the poorer player wins
     :param large_wager: The percent won/lost when the richer player wins
@@ -48,6 +50,11 @@ def run_round(p1, p2, large_bias, small_wager, large_wager):
 
 
 def generate_pairs(players):
+    """
+    A function to generate a pair of players out of the total group of players uniquely.
+    :param players:
+    :return:
+    """
     permutation = np.random.permutation(players)
     for i in range(0, len(players), 2):
         yield permutation[i], permutation[i+1]
@@ -58,10 +65,10 @@ def main():
     Runs the game
     """
     num_players = 4
-    num_rounds = 100000
-    large_wager = 0.2
-    small_wager = 0.17
-    large_bias = 0.01
+    num_rounds = 10000
+    large_wager = 0.20
+    small_wager = 0.05
+    large_bias = 0
     starting_wealth = 2000000
 
     players = generate_players(num_players, starting_wealth)
@@ -78,7 +85,7 @@ def main():
         total_wealth = 0
         for b in players:
             total_wealth += b.wealth
-        with open('./'+str(num_players)+str(num_rounds)+str(large_wager)+str(small_wager)+str(large_bias)+str(starting_wealth)+str(add), 'a') as f:
+        with open('./'+str(num_players)+str(num_rounds)+str(large_wager)+str(small_wager)+str(large_bias)+str(starting_wealth)+"N"+str(add), 'a') as f:
             writer = csv.writer(f)
             writer.writerow([p.wealth for p in players])
             f.close()
