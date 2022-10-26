@@ -1,8 +1,8 @@
 """
 Runs a yard sale simulation
 """
-import random
 import numpy as np
+import csv, os
 
 
 class Player:
@@ -57,21 +57,31 @@ def main():
     """
     Runs the game
     """
-    num_players = 64
-    num_rounds = 1000
+    num_players = 4
+    num_rounds = 100000
     large_wager = 0.2
     small_wager = 0.17
     large_bias = 0.01
-    starting_wealth = 200000
+    starting_wealth = 2000000
 
     players = generate_players(num_players, starting_wealth)
-
+    add = 0
+    while True:
+        if os.path.isfile(
+                './' + str(num_players) + str(num_rounds) + str(large_wager) + str(small_wager) + str(large_bias) + str(starting_wealth) + str(add)):
+            add += 1
+            continue
+        break
     for a in range(num_rounds):
         for p1, p2 in generate_pairs(players):
             run_round(p1, p2, large_bias, small_wager, large_wager)
         total_wealth = 0
         for b in players:
             total_wealth += b.wealth
+        with open('./'+str(num_players)+str(num_rounds)+str(large_wager)+str(small_wager)+str(large_bias)+str(starting_wealth)+str(add), 'a') as f:
+            writer = csv.writer(f)
+            writer.writerow([p.wealth for p in players])
+            f.close()
         print("round", a, [p.wealth for p in players], total_wealth)
 
 
