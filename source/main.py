@@ -64,10 +64,10 @@ def main():
     """
     Runs the game
     """
-    num_players = 4
+    num_players = 2
     num_rounds = 10000
     large_wager = 0.20
-    small_wager = 0.05
+    small_wager = 0.17
     large_bias = 0
     starting_wealth = 2000000
 
@@ -75,7 +75,7 @@ def main():
     add = 0
     while True:
         if os.path.isfile(
-                './' + str(num_players) + str(num_rounds) + str(large_wager) + str(small_wager) + str(large_bias) + str(starting_wealth) + str(add)):
+                './' + str(num_players) + str(num_rounds) + str(large_wager) + str(small_wager) + str(large_bias) + str(starting_wealth) + "N"+ str(add)):
             add += 1
             continue
         break
@@ -85,7 +85,7 @@ def main():
         total_wealth = 0
         for b in players:
             total_wealth += b.wealth
-        with open('./'+str(num_players)+str(num_rounds)+str(large_wager)+str(small_wager)+str(large_bias)+str(starting_wealth)+"N"+str(add), 'a') as f:
+        with open('./'+str(num_players)+str(num_rounds)+str(large_wager)+str(small_wager)+str(large_bias)+str(starting_wealth)+"N"+str(add), 'a', newline='') as f:
             writer = csv.writer(f)
             writer.writerow([p.wealth for p in players])
             f.close()
