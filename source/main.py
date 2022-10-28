@@ -59,19 +59,7 @@ def generate_pairs(players):
     for i in range(0, len(players), 2):
         yield permutation[i], permutation[i+1]
 
-
-def main():
-    """
-    Runs the game
-    """
-    num_players = 2
-    num_rounds = 50000
-    large_wager = 0.20
-    small_wager = 0.2
-    large_bias = 0
-    starting_wealth = 2000000
-
-    players = generate_players(num_players, starting_wealth)
+def create_file(num_players, num_rounds, large_wager, small_wager, large_bias, starting_wealth):
     add = 0
     while True:
         if os.path.isfile(
@@ -79,16 +67,39 @@ def main():
             add += 1
             continue
         break
+    return './' + str(num_players) + str(num_rounds) + str(large_wager) + str(small_wager) + str(large_bias) + str(starting_wealth) + "N" + str(add)
+
+
+def capture_data(file, packet):
+    with open(file, 'a', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(packet)
+        f.close()
+
+
+def main():
+    """
+    Runs the game
+    """
+    num_players = 6
+    num_rounds = 50000
+    large_wager = 0.20
+    small_wager = 0.2
+    large_bias = 0
+    starting_wealth = 2000000
+
+    players = generate_players(num_players, starting_wealth)
+
+    file = create_file(num_players, num_rounds, large_wager, small_wager, large_bias, starting_wealth)
     for a in range(num_rounds):
         for p1, p2 in generate_pairs(players):
             run_round(p1, p2, large_bias, small_wager, large_wager)
+        capture_data(file, [p.wealth for p in players])
+
         total_wealth = 0
         for b in players:
             total_wealth += b.wealth
-        with open('./' + str(num_players) + str(num_rounds) + str(large_wager) + str(small_wager) + str(large_bias) + str(starting_wealth) + "N" + str(add), 'a', newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow([p.wealth for p in players])
-            f.close()
+
         print("round", a, [p.wealth for p in players], total_wealth)
 
 
