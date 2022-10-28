@@ -53,13 +53,24 @@ def generate_pairs(players):
     """
     A function to generate a pair of players out of the total group of players uniquely.
     :param players:
-    :return:
+    :return: None
     """
     permutation = np.random.permutation(players)
     for i in range(0, len(players), 2):
         yield permutation[i], permutation[i+1]
 
+
 def create_file(num_players, num_rounds, large_wager, small_wager, large_bias, starting_wealth):
+    """
+    A function to create a file to save an instance of a total run of all rounds of the yard sale model
+    :param num_players: the number of playeys
+    :param num_rounds:  the number of rounds ran
+    :param large_wager: the large wager
+    :param small_wager: the small wager
+    :param large_bias: the percent above 50% in which the wealthier player might win
+    :param starting_wealth: The wealth each player starts with
+    :return: A file directory where the file can be created and the file name
+    """
     add = 0
     while True:
         if os.path.isfile(
@@ -71,6 +82,12 @@ def create_file(num_players, num_rounds, large_wager, small_wager, large_bias, s
 
 
 def capture_data(file, packet):
+    """
+    A file which captures a line of data into a file
+    :param file: The file to save the data to
+    :param packet: The set of data to be saved
+    :return: None
+    """
     with open(file, 'a', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(packet)
