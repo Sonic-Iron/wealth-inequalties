@@ -63,7 +63,7 @@ def generate_pairs(players):
 def create_file(num_players, num_rounds, large_wager, small_wager, large_bias, starting_wealth):
     """
     A function to create a file to save an instance of a total run of all rounds of the yard sale model
-    :param num_players: the number of playeys
+    :param num_players: the number of players
     :param num_rounds:  the number of rounds ran
     :param large_wager: the large wager
     :param small_wager: the small wager
