@@ -4,6 +4,7 @@ Runs a yard sale simulation
 import csv
 import os
 import numpy as np
+import GraphPlotter
 
 
 class Player:
