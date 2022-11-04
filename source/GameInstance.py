@@ -3,8 +3,11 @@ Runs a yard sale simulation
 """
 import csv
 import os
-import numpy as np
+import sys
 
+import numpy as np
+import time
+import warnings
 
 class Player:
     """
@@ -64,7 +67,7 @@ def generate_gini_coefficient(starting_wealth, row):
     """
     A function to generate a gini coefficient for a given set of values
     :param starting_wealth: the wealth each player starts with in each run
-    :param row: The set of data to gind the gini coefficient for
+    :param row: The set of data to find the gini coefficient for
     :return: returns the coefficient
     """
     row = sorted(row)
@@ -77,16 +80,30 @@ def generate_gini_coefficient(starting_wealth, row):
     return (max_area-wealth_area)/max_area
 
 
-def main():
+def main(num_players=4,
+         num_rounds=10000,
+         large_wager=0.2,
+         small_wager=0.17,
+         large_bias=0,
+         starting_wealth=2000000):
     """
     Runs the game
     """
-    num_players = 4
-    num_rounds = 10000
-    large_wager = 0.20
-    small_wager = 0.17
-    large_bias = 0
-    starting_wealth = 2000000
+    if not num_players % 2:
+        sys.exit("Number of players has to be a multiple of 2")
+    if num_rounds < 0:
+        sys.exit("The number of rounds needs to be positive")
+    if not 0 < large_wager < 1:
+        warnings.warn("Large Wager needs to be between 0 and 1")
+        large_wager = np.clip(large_wager, 0, 1)
+    if not 0 < small_wager < 1:
+        warnings.warn("Small Wager needs to be between 0 and 1")
+        small_wager = np.clip(small_wager, 0, 1)
+    if not -0.5 < large_bias < 0.5:
+        warnings.warn("The large bias needs to be between -0.5 and 0.5")
+        large_bias  = np.clip(large_bias, -0.5, 0.5)
+
+
 
     players = generate_players(num_players, starting_wealth)
     add = 0
@@ -96,6 +113,7 @@ def main():
             add += 1
             continue
         break
+    start_time = time.time()
     for a in range(num_rounds):
         for p1, p2 in generate_pairs(players):
             run_round(p1, p2, large_bias, small_wager, large_wager)
@@ -109,6 +127,7 @@ def main():
             writer.writerow(row_data)
             f.close()
         print("round", a, [p.wealth for p in players], total_wealth)
+    print('Finished in', time.time() - start_time, 'seconds')
 
 
 if __name__ == "__main__":
