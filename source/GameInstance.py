@@ -60,6 +60,20 @@ def generate_pairs(players):
         yield permutation[i], permutation[i+1]
 
 
+def generate_gini_coefficient(starting_wealth, row):
+
+    max_area = starting_wealth*len(row)/2
+    wealth_area =0
+    for p in range(len(row)):
+        area = 0
+        area_set = row[0:p+1]
+        area += area_set.pop()/2
+        area += sum(area_set)
+        area = area/(len(row)*starting_wealth)
+        wealth_area += area
+    return wealth_area/max_area
+
+
 def main():
     """
     Runs the game
@@ -87,7 +101,9 @@ def main():
             total_wealth += b.wealth
         with open('./'+str(num_players)+str(num_rounds)+str(large_wager)+str(small_wager)+str(large_bias)+str(starting_wealth)+"N"+str(add), 'a') as f:
             writer = csv.writer(f)
-            writer.writerow([p.wealth for p in players])
+            row_data = [p.wealth for p in players]
+            row_data.append(generate_gini_coefficient(starting_wealth, row_data))
+            writer.writerow(row_data)
             f.close()
         print("round", a, [p.wealth for p in players], total_wealth)
 
