@@ -4,10 +4,10 @@ Runs a yard sale simulation
 import csv
 import os
 import sys
-
-import numpy as np
 import time
 import warnings
+import numpy as np
+
 
 class Player:
     """
@@ -65,16 +65,16 @@ def generate_pairs(players):
 
 def generate_gini_coefficient(starting_wealth, row):
     """
-    A function to generate a gini coefficient for a given set of values
+    A function to generate a Gini coefficient for a given set of values
     :param starting_wealth: the wealth each player starts with in each run
-    :param row: The set of data to find the gini coefficient for
+    :param row: The set of data to find the Gini coefficient for
     :return: returns the coefficient
     """
     row = sorted(row)
     max_area = 0.5
     wealth_area = 0
-    for p in range(len(row)):
-        area_set = row[0:p+1]
+    for v in range(len(row)):
+        area_set = row[0:v+1]
         wealth_area += ((area_set.pop()/(starting_wealth*len(row)))/len(row))/2
         wealth_area += (sum(area_set)/(starting_wealth*len(row)))/len(row)
     return (max_area-wealth_area)/max_area
@@ -101,15 +101,13 @@ def main(num_players=4,
         small_wager = np.clip(small_wager, 0, 1)
     if not -0.5 < large_bias < 0.5:
         warnings.warn("The large bias needs to be between -0.5 and 0.5")
-        large_bias  = np.clip(large_bias, -0.5, 0.5)
-
-
-
+        large_bias = np.clip(large_bias, -0.5, 0.5)
     players = generate_players(num_players, starting_wealth)
     add = 0
     while True:
         if os.path.isfile(
-                './' + str(num_players) + str(num_rounds) + str(large_wager) + str(small_wager) + str(large_bias) + str(starting_wealth)+"N"+ str(add)):
+                './' + str(num_players) + str(num_rounds) + str(large_wager) +
+                str(small_wager) + str(large_bias) + str(starting_wealth)+"N" + str(add)):
             add += 1
             continue
         break
@@ -120,7 +118,8 @@ def main(num_players=4,
         total_wealth = 0
         for b in players:
             total_wealth += b.wealth
-        with open('./'+str(num_players)+str(num_rounds)+str(large_wager)+str(small_wager)+str(large_bias)+str(starting_wealth)+"N"+str(add), 'a', newline="") as f:
+        with open('./'+str(num_players)+str(num_rounds)+str(large_wager) +
+                  str(small_wager)+str(large_bias)+str(starting_wealth)+"N"+str(add), 'a', newline="") as f:
             writer = csv.writer(f)
             row_data = [p.wealth for p in players]
             row_data.append(generate_gini_coefficient(starting_wealth, row_data))
