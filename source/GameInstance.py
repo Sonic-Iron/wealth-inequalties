@@ -61,17 +61,14 @@ def generate_pairs(players):
 
 
 def generate_gini_coefficient(starting_wealth, row):
-
-    max_area = starting_wealth*len(row)/2
-    wealth_area =0
+    row = sorted(row)
+    max_area = 0.5
+    wealth_area = 0
     for p in range(len(row)):
-        area = 0
         area_set = row[0:p+1]
-        area += area_set.pop()/2
-        area += sum(area_set)
-        area = area/(len(row)*starting_wealth)
-        wealth_area += area
-    return wealth_area/max_area
+        wealth_area += ((area_set.pop()/(starting_wealth*len(row)))/len(row))/2
+        wealth_area += (sum(area_set)/(starting_wealth*len(row)))/len(row)
+    return (max_area-wealth_area)/max_area
 
 
 def main():
@@ -81,7 +78,7 @@ def main():
     num_players = 4
     num_rounds = 10000
     large_wager = 0.20
-    small_wager = 0.05
+    small_wager = 0.17
     large_bias = 0
     starting_wealth = 2000000
 
@@ -89,7 +86,7 @@ def main():
     add = 0
     while True:
         if os.path.isfile(
-                './' + str(num_players) + str(num_rounds) + str(large_wager) + str(small_wager) + str(large_bias) + str(starting_wealth) + str(add)):
+                './' + str(num_players) + str(num_rounds) + str(large_wager) + str(small_wager) + str(large_bias) + str(starting_wealth)+"N"+ str(add)):
             add += 1
             continue
         break
@@ -99,7 +96,7 @@ def main():
         total_wealth = 0
         for b in players:
             total_wealth += b.wealth
-        with open('./'+str(num_players)+str(num_rounds)+str(large_wager)+str(small_wager)+str(large_bias)+str(starting_wealth)+"N"+str(add), 'a') as f:
+        with open('./'+str(num_players)+str(num_rounds)+str(large_wager)+str(small_wager)+str(large_bias)+str(starting_wealth)+"N"+str(add), 'a', newline="") as f:
             writer = csv.writer(f)
             row_data = [p.wealth for p in players]
             row_data.append(generate_gini_coefficient(starting_wealth, row_data))
