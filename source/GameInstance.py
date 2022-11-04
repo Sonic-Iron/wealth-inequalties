@@ -61,6 +61,12 @@ def generate_pairs(players):
 
 
 def generate_gini_coefficient(starting_wealth, row):
+    """
+    A function to generate a gini coefficient for a given set of values
+    :param starting_wealth: the wealth each player starts with in each run
+    :param row: The set of data to gind the gini coefficient for
+    :return: returns the coefficient
+    """
     row = sorted(row)
     max_area = 0.5
     wealth_area = 0
