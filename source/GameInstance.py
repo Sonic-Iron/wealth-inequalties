@@ -89,7 +89,7 @@ def main(num_players=4,
     """
     Runs the game
     """
-    if not num_players % 2:
+    if num_players % 2:
         sys.exit("Number of players has to be a multiple of 2")
     if num_rounds < 0:
         sys.exit("The number of rounds needs to be positive")
@@ -112,20 +112,20 @@ def main(num_players=4,
             continue
         break
     start_time = time.time()
-    for a in range(num_rounds):
-        for p1, p2 in generate_pairs(players):
-            run_round(p1, p2, large_bias, small_wager, large_wager)
-        total_wealth = 0
-        for b in players:
-            total_wealth += b.wealth
-        with open('./'+str(num_players)+str(num_rounds)+str(large_wager) +
-                  str(small_wager)+str(large_bias)+str(starting_wealth)+"N"+str(add), 'a', newline="") as f:
-            writer = csv.writer(f)
+    with open('./' + str(num_players) + str(num_rounds) + str(large_wager) +
+              str(small_wager) + str(large_bias) + str(starting_wealth) + "N" + str(add), 'a', newline="") as f:
+        writer = csv.writer(f)
+        for a in range(num_rounds):
+            for p1, p2 in generate_pairs(players):
+                run_round(p1, p2, large_bias, small_wager, large_wager)
+            total_wealth = 0
+            for b in players:
+                total_wealth += b.wealth
             row_data = [p.wealth for p in players]
             row_data.append(generate_gini_coefficient(starting_wealth, row_data))
             writer.writerow(row_data)
-            f.close()
-        print("round", a, [p.wealth for p in players], total_wealth)
+            #print("round", a, [p.wealth for p in players], total_wealth)
+        f.close()
     print('Finished in', time.time() - start_time, 'seconds')
 
 
