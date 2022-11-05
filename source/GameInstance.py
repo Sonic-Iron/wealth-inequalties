@@ -31,7 +31,7 @@ def generate_players(count, wealth):
     return [Player(wealth) for _ in range(count)]
 
 
-def run_round(p1, p2, large_bias, small_wager, large_wager):
+def run_transaction(p1, p2, large_bias, small_wager, large_wager, np_gen):
     """
     Run a round of the game
     :param p1: the first player in the transaction
@@ -41,7 +41,7 @@ def run_round(p1, p2, large_bias, small_wager, large_wager):
     :param large_wager: The percent won/lost when the richer player wins
     """
     p_more, p_less = ((p1, p2) if p1.wealth >= p2.wealth else (p2, p1))
-    if np.random.binomial(1, 0.5 + large_bias):
+    if np_gen.binomial(1, 0.5 + large_bias):
         # the wealthier player wins
         wager = int(p_less.wealth * small_wager)
         p_more.wealth += wager
@@ -52,13 +52,13 @@ def run_round(p1, p2, large_bias, small_wager, large_wager):
         p_more.wealth -= wager
 
 
-def generate_pairs(players):
+def generate_pairs(players, np_gen):
     """
     A function to generate a pair of players out of the total group of players uniquely.
     :param players:
     :return:
     """
-    permutation = np.random.permutation(players)
+    permutation = np_gen.permutation(players)
     for i in range(0, len(players), 2):
         yield permutation[i], permutation[i+1]
 
@@ -80,28 +80,46 @@ def generate_gini_coefficient(starting_wealth, row):
     return (max_area-wealth_area)/max_area
 
 
-def main(num_players=4,
-         num_rounds=10000,
-         large_wager=0.2,
-         small_wager=0.17,
-         large_bias=0,
-         starting_wealth=2000000):
-    """
-    Runs the game
-    """
+def valid_check(num_players, num_rounds, large_wager, small_wager, large_bias):
     if num_players % 2:
         sys.exit("Number of players has to be a multiple of 2")
     if num_rounds < 0:
         sys.exit("The number of rounds needs to be positive")
-    if not 0 < large_wager < 1:
+    if not 0 <= large_wager <= 1:
         warnings.warn("Large Wager needs to be between 0 and 1")
         large_wager = np.clip(large_wager, 0, 1)
-    if not 0 < small_wager < 1:
+    if not 0 <= small_wager <= 1:
         warnings.warn("Small Wager needs to be between 0 and 1")
         small_wager = np.clip(small_wager, 0, 1)
-    if not -0.5 < large_bias < 0.5:
+    if not -0.5 <= large_bias <= 0.5:
         warnings.warn("The large bias needs to be between -0.5 and 0.5")
         large_bias = np.clip(large_bias, -0.5, 0.5)
+    return large_wager, small_wager, large_bias
+
+
+def run_round(large_bias, small_wager, large_wager, starting_wealth, players, writer, np_gen):
+    for p1, p2 in generate_pairs(players, np_gen):
+        run_transaction(p1, p2, large_bias, small_wager, large_wager, np_gen)
+    total_wealth = 0
+    for b in players:
+        total_wealth += b.wealth
+    row_data = [p.wealth for p in players]
+    row_data.append(generate_gini_coefficient(starting_wealth, row_data))
+    writer.writerow(row_data)
+
+
+def run_sim(num_players=16,
+         num_rounds=10000,
+         large_wager=0.2,
+         small_wager=0.17,
+         large_bias=0,
+         starting_wealth=2000000,
+         random_seed=1):
+    """
+    Runs the game
+    """
+    np_gen = np.random.default_rng(seed=random_seed)
+    large_wager, small_wager, large_bias = valid_check(num_players, num_rounds, large_wager, small_wager, large_bias)
     players = generate_players(num_players, starting_wealth)
     add = 0
     while True:
@@ -113,21 +131,13 @@ def main(num_players=4,
         break
     start_time = time.time()
     with open('./' + str(num_players) + str(num_rounds) + str(large_wager) +
-              str(small_wager) + str(large_bias) + str(starting_wealth) + "N" + str(add), 'a', newline="") as f:
+              str(small_wager) + str(large_bias) + str(starting_wealth) + "N" + str(add), 'a', encoding='utf-8',newline="") as f:
         writer = csv.writer(f)
-        for a in range(num_rounds):
-            for p1, p2 in generate_pairs(players):
-                run_round(p1, p2, large_bias, small_wager, large_wager)
-            total_wealth = 0
-            for b in players:
-                total_wealth += b.wealth
-            row_data = [p.wealth for p in players]
-            row_data.append(generate_gini_coefficient(starting_wealth, row_data))
-            writer.writerow(row_data)
-            #print("round", a, [p.wealth for p in players], total_wealth)
+        for _ in range(num_rounds):
+            run_round(large_bias, small_wager, large_wager, starting_wealth, players, writer, np_gen)
         f.close()
     print('Finished in', time.time() - start_time, 'seconds')
 
 
 if __name__ == "__main__":
-    main()
+    run_sim()

@@ -1,12 +1,15 @@
-import threading
-import time
+"""
+This is a cool document
+"""
+from GameInstance import run_sim
+
 
 def main():
     """
     main
     :return: None
     """
-    pass
+    run_sim()
 
 
 if __name__ == "__main__":
