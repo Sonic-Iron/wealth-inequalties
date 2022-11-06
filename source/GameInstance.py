@@ -109,12 +109,12 @@ def run_round(large_bias, small_wager, large_wager, starting_wealth, players, wr
 
 
 def run_sim(num_players=16,
-         num_rounds=10000,
-         large_wager=0.2,
-         small_wager=0.17,
-         large_bias=0,
-         starting_wealth=2000000,
-         random_seed=1):
+            num_rounds=10000,
+            large_wager=0.2,
+            small_wager=0.17,
+            large_bias=0,
+            starting_wealth=2000000,
+            random_seed=1):
     """
     Runs the game
     """
