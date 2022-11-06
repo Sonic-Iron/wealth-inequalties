@@ -6,6 +6,7 @@ import os
 import sys
 import time
 import warnings
+
 import numpy as np
 
 
@@ -108,8 +109,8 @@ def run_round(large_bias, small_wager, large_wager, starting_wealth, players, wr
     writer.writerow(row_data)
 
 
-def run_sim(num_players=16,
-            num_rounds=10000,
+def run_sim(num_players=2,
+            num_rounds=1000,
             large_wager=0.2,
             small_wager=0.17,
             large_bias=0,
@@ -129,14 +130,12 @@ def run_sim(num_players=16,
             add += 1
             continue
         break
-    start_time = time.time()
     with open('./' + str(num_players) + str(num_rounds) + str(large_wager) +
               str(small_wager) + str(large_bias) + str(starting_wealth) + "N" + str(add), 'a', encoding='utf-8',newline="") as f:
         writer = csv.writer(f)
         for _ in range(num_rounds):
             run_round(large_bias, small_wager, large_wager, starting_wealth, players, writer, np_gen)
         f.close()
-    print('Finished in', time.time() - start_time, 'seconds')
 
 
 if __name__ == "__main__":
