@@ -117,6 +117,14 @@ def run_sim(num_players=16,
             random_seed=1):
     """
     Runs the game
+    :param num_players: The default number of players per game
+    :param num_rounds:  The default  number of rounds per gmae
+    :param large_wager: The default  large wager of a game
+    :param small_wager: The default  small wager of a game
+    :param large_bias: The default  bias towards the richer player of a game
+    :param starting_wealth: The default  starting wealth per player of a game
+    :param random_seed: The default seed of randomness, so that different games can be compared
+    :return: None
     """
     np_gen = np.random.default_rng(seed=random_seed)
     large_wager, small_wager, large_bias = valid_check(num_players, num_rounds, large_wager, small_wager, large_bias)
