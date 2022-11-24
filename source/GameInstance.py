@@ -39,6 +39,7 @@ def run_transaction(p1, p2, large_bias, small_wager, large_wager, np_gen):
     :param large_bias: The percent of time the wealthier player will win
     :param small_wager: The percent won/lost when the poorer player wins
     :param large_wager: The percent won/lost when the richer player wins
+    :param np_gen: the variable to use for random generation using the same seed
     """
     p_more, p_less = ((p1, p2) if p1.wealth >= p2.wealth else (p2, p1))
     if np_gen.binomial(1, 0.5 + large_bias):
@@ -54,8 +55,9 @@ def run_transaction(p1, p2, large_bias, small_wager, large_wager, np_gen):
 
 def generate_pairs(players, np_gen):
     """
-    A function to generate a pair of players out of the total group of players uniquely.
-    :param players:
+    A function to generate a pair of players out of the total group of players uniquely
+    :param players: the list of players
+    :param np_gen: the random number seed to use to generate permutations of players
     :return:
     """
     permutation = np_gen.permutation(players)
@@ -118,7 +120,7 @@ def run_sim(num_players=16,
     """
     Runs the game
     :param num_players: The default number of players per game
-    :param num_rounds:  The default  number of rounds per gmae
+    :param num_rounds:  The default  number of rounds per game
     :param large_wager: The default  large wager of a game
     :param small_wager: The default  small wager of a game
     :param large_bias: The default  bias towards the richer player of a game
@@ -139,7 +141,8 @@ def run_sim(num_players=16,
         break
     start_time = time.time()
     with open('./' + str(num_players) + str(num_rounds) + str(large_wager) +
-              str(small_wager) + str(large_bias) + str(starting_wealth) + "N" + str(add), 'a', encoding='utf-8',newline="") as f:
+              str(small_wager) + str(large_bias) + str(starting_wealth) + "N" + str(add), 'a', encoding='utf-8',
+              newline="") as f:
         writer = csv.writer(f)
         for _ in range(num_rounds):
             run_round(large_bias, small_wager, large_wager, starting_wealth, players, writer, np_gen)
