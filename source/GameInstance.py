@@ -108,6 +108,11 @@ def run_round(large_bias, small_wager, large_wager, starting_wealth, players, wr
     row_data = [p.wealth for p in players]
     row_data.append(generate_gini_coefficient(starting_wealth, row_data))
     writer.writerow(row_data)
+    if generate_gini_coefficient(starting_wealth, row_data) > 1-(1.1/len(players)):
+        return False
+    return False
+
+
 
 
 def run_sim(num_players=16,
@@ -145,7 +150,8 @@ def run_sim(num_players=16,
               newline="") as f:
         writer = csv.writer(f)
         for _ in range(num_rounds):
-            run_round(large_bias, small_wager, large_wager, starting_wealth, players, writer, np_gen)
+            if run_round(large_bias, small_wager, large_wager, starting_wealth, players, writer, np_gen):
+                break
         f.close()
     print('Finished in', time.time() - start_time, 'seconds')
 
