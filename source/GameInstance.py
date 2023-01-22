@@ -103,14 +103,9 @@ def valid_check(num_players, num_rounds, large_wager, small_wager, large_bias):
 def run_round(large_bias, small_wager, large_wager, starting_wealth, players, writer, np_gen):
     for p1, p2 in generate_pairs(players, np_gen):
         run_transaction(p1, p2, large_bias, small_wager, large_wager, np_gen)
-    total_wealth = 0
-    for b in players:
-        total_wealth += b.wealth
     row_data = [p.wealth for p in players]
     row_data.append(generate_gini_coefficient(starting_wealth, row_data))
     writer.writerow(row_data)
-    if generate_gini_coefficient(starting_wealth, row_data) > 1-(1.1/len(players)):
-        return False
     return False
 
 
@@ -146,12 +141,20 @@ def run_sim(num_players=2,
             continue
         break
     with open('./' + str(num_players) + str(num_rounds) + str(large_wager) +
-              str(small_wager) + str(large_bias) + str(starting_wealth) + "N" + str(add), 'a', encoding='utf-8',
+              str(small_wager) + str(large_bias) + str(starting_wealth) + "N" + str(add), 'a+', encoding='utf-8',
               newline="") as f:
         writer = csv.writer(f)
         for _ in range(num_rounds):
             if run_round(large_bias, small_wager, large_wager, starting_wealth, players, writer, np_gen):
                 break
+        f.seek(0)
+        reader = csv.reader(f)
+        g_i = ''
+        pos = 1
+        for row in reader:
+            g_i += '('+str(pos)+','+str(round(float(row[2]), 4))+')'
+            pos += 1
+        print(g_i)
         f.close()
 
 if __name__ == "__main__":
