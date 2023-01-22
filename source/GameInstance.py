@@ -154,6 +154,5 @@ def run_sim(num_players=2,
                 break
         f.close()
 
-print('gere')
 if __name__ == "__main__":
     run_sim()
