@@ -15,7 +15,7 @@ def main():
     #for i in range(len(large_wager_array)):
      #   for j in range(len(large_bias_array)):
       #      run_sim(large_wager=large_wager_array[i], small_wager=small_wager_array[i], large_bias=large_bias_array[j])
-    run_sim(num_players=2)
+    run_sim(num_players=2, tax_rate=2)
 
 
 if __name__ == "__main__":

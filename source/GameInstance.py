@@ -85,7 +85,7 @@ def generate_gini_coefficient(starting_wealth, row):
     return (max_area - wealth_area) / max_area
 
 
-def valid_check(num_players, num_rounds, large_wager, small_wager, large_bias):
+def valid_check(num_players, num_rounds, large_wager, small_wager, large_bias, tax_rate):
     if num_players % 2:
         sys.exit("Number of players has to be a multiple of 2")
     if num_rounds < 0:
@@ -99,7 +99,10 @@ def valid_check(num_players, num_rounds, large_wager, small_wager, large_bias):
     if not -0.5 <= large_bias <= 0.5:
         warnings.warn("The large bias needs to be between -0.5 and 0.5")
         large_bias = np.clip(large_bias, -0.5, 0.5)
-    return large_wager, small_wager, large_bias
+    if not 0 <= tax_rate <= 1:
+        warnings.warn("The tax rate needs to be between 0 and 1")
+        tax_rate = 0
+    return large_wager, small_wager, large_bias, tax_rate
 
 
 def run_round(large_bias, small_wager, large_wager, starting_wealth, players, writer, np_gen, tax_rate):
@@ -140,7 +143,7 @@ def run_sim(num_players=2,
     :return: None
     """
     np_gen = np.random.default_rng(seed=random_seed)
-    large_wager, small_wager, large_bias = valid_check(num_players, num_rounds, large_wager, small_wager, large_bias)
+    large_wager, small_wager, large_bias, tax_rate = valid_check(num_players, num_rounds, large_wager, small_wager, large_bias, tax_rate)
     players = generate_players(num_players, starting_wealth)
     add = 0
     while True:
