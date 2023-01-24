@@ -4,7 +4,6 @@ Runs a yard sale simulation
 import csv
 import os
 import sys
-import time
 import warnings
 
 import numpy as np
@@ -108,11 +107,10 @@ def valid_check(num_players, num_rounds, large_wager, small_wager, large_bias, t
 def run_round(large_bias, small_wager, large_wager, starting_wealth, players, writer, np_gen, tax_rate):
     for p1, p2 in generate_pairs(players, np_gen):
         run_transaction(p1, p2, large_bias, small_wager, large_wager, np_gen)
-    redistribute(players, tax_rate)
+    players = redistribute(players, tax_rate)
     row_data = [p.wealth for p in players]
     row_data.append(generate_gini_coefficient(starting_wealth, row_data))
     writer.writerow(row_data)
-    return False
 
 
 def redistribute(players, tax_rate):
@@ -120,6 +118,7 @@ def redistribute(players, tax_rate):
     for player in players:
         player.wealth *= (1 - tax_rate)
         player.wealth += tax_refund
+    return players
 
 
 def run_sim(num_players=2,
@@ -158,8 +157,7 @@ def run_sim(num_players=2,
               newline="") as f:
         writer = csv.writer(f)
         for _ in range(num_rounds):
-            if run_round(large_bias, small_wager, large_wager, starting_wealth, players, writer, np_gen, tax_rate):
-                break
+            run_round(large_bias, small_wager, large_wager, starting_wealth, players, writer, np_gen, tax_rate)
         f.seek(0)
         reader = csv.reader(f)
         g_i = ''
