@@ -13,7 +13,6 @@ class Player:
     """
     Represents a player, all values of wealth inside are decimal and returns Decimal type to outside the instance
     """
-
     def __init__(self, wealth):
         """
         Create a player
@@ -64,7 +63,7 @@ def generate_pairs(players, np_gen):
     """
     permutation = np_gen.permutation(players)
     for i in range(0, len(players), 2):
-        yield permutation[i], permutation[i + 1]
+        yield permutation[i], permutation[i+1]
 
 
 def generate_gini_coefficient(starting_wealth, row):
@@ -78,10 +77,10 @@ def generate_gini_coefficient(starting_wealth, row):
     max_area = 0.5
     wealth_area = 0
     for v in range(len(row)):
-        area_set = row[0:v + 1]
-        wealth_area += ((area_set.pop() / (starting_wealth * len(row))) / len(row)) / 2
-        wealth_area += (sum(area_set) / (starting_wealth * len(row))) / len(row)
-    return (max_area - wealth_area) / max_area
+        area_set = row[0:v+1]
+        wealth_area += ((area_set.pop()/(starting_wealth*len(row)))/len(row))/2
+        wealth_area += (sum(area_set)/(starting_wealth*len(row)))/len(row)
+    return (max_area-wealth_area)/max_area
 
 
 def valid_check(num_players, num_rounds, large_wager, small_wager, large_bias, tax_rate):
@@ -148,7 +147,7 @@ def run_sim(num_players=2,
     while True:
         if os.path.isfile(
                 './' + str(num_players) + str(num_rounds) + str(large_wager) +
-                str(small_wager) + str(large_bias) + str(starting_wealth) + "N" + str(add)):
+                str(small_wager) + str(large_bias) + str(starting_wealth)+"N" + str(add)):
             add += 1
             continue
         break
@@ -161,11 +160,17 @@ def run_sim(num_players=2,
         f.seek(0)
         reader = csv.reader(f)
         g_i = ''
+        graph_wealth = ''
         pos = 1
         for row in reader:
-            g_i += '(' + str(pos) + ',' + str(round(float(row[2]), 4)) + ')'
+            # looks at only the gini coefficient and creates a list of them for the latex doc over time
+            g_i += '(' + str(pos) + ',' + str(round(float(row[-1]), 4)) + ')'
             pos += 1
+        players.sort(key= lambda x : x.wealth)
+        for player in range(len(players)):
+            graph_wealth += '('+str(player)+','+str(players[player].wealth)+')'
         print(g_i)
+        print(graph_wealth)
         f.close()
 
 
