@@ -31,7 +31,7 @@ def generate_players(count, wealth):
     return [Player(wealth) for _ in range(count)]
 
 
-def run_transaction(p1, p2, large_bias, small_wager, large_wager, np_gen):
+def run_transaction(p1, p2, large_bias_coefficient, small_wager, large_wager, np_gen):
     """
     Run a round of the game
     :param p1: the first player in the transaction
@@ -42,7 +42,7 @@ def run_transaction(p1, p2, large_bias, small_wager, large_wager, np_gen):
     :param np_gen: the variable to use for random generation using the same seed
     """
     p_more, p_less = ((p1, p2) if p1.wealth >= p2.wealth else (p2, p1))
-    if np_gen.binomial(1, 0.5 + large_bias):
+    if np_gen.binomial(1, 0.5 + large_bias_coefficient): #TODO: change the large bias to be dynamic based on wealth difference
         # the wealthier player wins
         wager = int(p_less.wealth * small_wager)
         p_more.wealth += wager
@@ -83,7 +83,7 @@ def generate_gini_coefficient(starting_wealth, row):
     return (max_area-wealth_area)/max_area
 
 
-def valid_check(num_players, num_rounds, large_wager, small_wager, large_bias, tax_rate):
+def valid_check(num_players, num_rounds, large_wager, small_wager, large_bias_coefficient, tax_rate):
     if num_players % 2:
         sys.exit("Number of players has to be a multiple of 2")
     if num_rounds < 0:
@@ -94,18 +94,18 @@ def valid_check(num_players, num_rounds, large_wager, small_wager, large_bias, t
     if not 0 <= small_wager <= 1:
         warnings.warn("Small Wager needs to be between 0 and 1")
         small_wager = np.clip(small_wager, 0, 1)
-    if not -0.5 <= large_bias <= 0.5:
+    if not -0.5 <= large_bias_coefficient <= 0.5: #TODO: change this to be dynamic
         warnings.warn("The large bias needs to be between -0.5 and 0.5")
-        large_bias = np.clip(large_bias, -0.5, 0.5)
+        large_bias = np.clip(large_bias_coefficient, -0.5, 0.5)
     if not 0 <= tax_rate <= 1:
         warnings.warn("The tax rate needs to be between 0 and 1")
         tax_rate = 0
-    return large_wager, small_wager, large_bias, tax_rate
+    return large_wager, small_wager, large_bias_coefficient, tax_rate
 
 
-def run_round(large_bias, small_wager, large_wager, starting_wealth, players, writer, np_gen, tax_rate):
+def run_round(large_bias_coefficient, small_wager, large_wager, starting_wealth, players, writer, np_gen, tax_rate):
     for p1, p2 in generate_pairs(players, np_gen):
-        run_transaction(p1, p2, large_bias, small_wager, large_wager, np_gen)
+        run_transaction(p1, p2, large_bias_coefficient, small_wager, large_wager, np_gen)
     players = redistribute(players, tax_rate)
     row_data = [p.wealth for p in players]
     row_data.append(generate_gini_coefficient(starting_wealth, row_data))
@@ -113,10 +113,9 @@ def run_round(large_bias, small_wager, large_wager, starting_wealth, players, wr
 
 
 def redistribute(players, tax_rate):
-    tax_refund = (sum([player.wealth for player in players]) * tax_rate) / len(players)
+    wealth = sum([player.wealth for player in players])
     for player in players:
-        player.wealth *= (1 - tax_rate)
-        player.wealth += tax_refund
+        player.wealth += (tax_rate*(wealth/len(players)-player.wealth))
     return players
 
 
@@ -124,7 +123,7 @@ def run_sim(num_players=2,
             num_rounds=1000,
             large_wager=0.2,
             small_wager=0.17,
-            large_bias=0,
+            large_bias_coefficient=0,
             starting_wealth=2000000,
             random_seed=1,
             tax_rate=0):
@@ -134,36 +133,36 @@ def run_sim(num_players=2,
     :param num_rounds:  The default  number of rounds per game
     :param large_wager: The default  large wager of a game
     :param small_wager: The default  small wager of a game
-    :param large_bias: The default  bias towards the richer player of a game
+    :param large_bias_coefficient: The default  bias towards the richer player of a game
     :param starting_wealth: The default  starting wealth per player of a game
     :param random_seed: The default seed of randomness, so that different games can be compared
     :param tax_rate: The percent of tax paid by each actor
     :return: None
     """
     np_gen = np.random.default_rng(seed=random_seed)
-    large_wager, small_wager, large_bias, tax_rate = valid_check(num_players, num_rounds, large_wager, small_wager, large_bias, tax_rate)
+    large_wager, small_wager, large_bias_coefficient, tax_rate = valid_check(num_players, num_rounds, large_wager, small_wager, large_bias_coefficient, tax_rate)
     players = generate_players(num_players, starting_wealth)
     add = 0
     while True:
         if os.path.isfile(
                 './' + str(num_players) + str(num_rounds) + str(large_wager) +
-                str(small_wager) + str(large_bias) + str(starting_wealth)+"N" + str(add)):
+                str(small_wager) + str(large_bias_coefficient) + str(starting_wealth)+"N" + str(add)):
             add += 1
             continue
         break
     with open('./' + str(num_players) + str(num_rounds) + str(large_wager) +
-              str(small_wager) + str(large_bias) + str(starting_wealth) + "N" + str(add), 'a+', encoding='utf-8',
+              str(small_wager) + str(large_bias_coefficient) + str(starting_wealth) + "N" + str(add), 'a+', encoding='utf-8',
               newline="") as f:
         writer = csv.writer(f)
         for _ in range(num_rounds):
-            run_round(large_bias, small_wager, large_wager, starting_wealth, players, writer, np_gen, tax_rate)
+            run_round(large_bias_coefficient, small_wager, large_wager, starting_wealth, players, writer, np_gen, tax_rate)
         f.seek(0)
         reader = csv.reader(f)
         g_i = ''
         graph_wealth = ''
         pos = 1
         for row in reader:
-            # looks at only the gini coefficient and creates a list of them for the latex doc over time
+            # looks at only the Gini coefficient and creates a list of them for the latex doc over time
             g_i += '(' + str(pos) + ',' + str(round(float(row[-1]), 4)) + ')'
             pos += 1
         players.sort(key= lambda x : x.wealth)
