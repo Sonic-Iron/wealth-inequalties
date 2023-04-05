@@ -2,16 +2,21 @@ import numpy as np
 from scipy import linalg
 
 
+
+def main():
+    """
+    This is a function which runs all other functions
+    :return:
+    """
+    k_intervals = 0
+    h = Wmax/k_intervals + 1
+
+    C = []
+
+
+
 def new_matrix(C,i,j,h,g,W,N,T):
     A = new_A(C,i,h,N,t,k)
     B = new_B(C,i,h,N,t,k)
 
-
-def new_A(C, i,h,N,t,k):
-    coeffSum = 0
-    for j in range(i+1, k):
-        coeffSum += C[t][j-1] + (h/2*N)*C[t][i-1]
-    return (h/N)*coeffSum
-
-def new_B(C,i,h,N,t,k):
-    return ''
+def generate_inital_coeff():
