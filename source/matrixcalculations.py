@@ -13,9 +13,14 @@ def main():
     W = agentCount*startingWealth
     maxWealth = agentCount*startingWealth
     h = W/K+1
+    P_his = []
+    P_his.append(create_c(startingWealth,agentCount))
 
-def create_c():
-    return
+def create_c(startingWealth, agentCount):
+    temp = []
+    for _ in range(agentCount):
+        temp.append(startingWealth)
+    return temp
 
 def new_matrix():
     return ''
