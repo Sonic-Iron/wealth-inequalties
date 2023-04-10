@@ -122,7 +122,7 @@ def redistribute(players, tax_rate):
 def run_sim(num_players=2,
             num_rounds=1000,
             large_wager=0.2,
-            small_wager=0.17,
+            small_wager=0.2,
             large_bias_coefficient=0,
             starting_wealth=2000000,
             random_seed=1,
