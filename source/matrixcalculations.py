@@ -16,10 +16,9 @@ def main():
 
     P_his = []
     P_his.append(create_c(startingWealth, agentCount, K))
-    print(P_his)
     gamma = 0.2
     tau = 0.02
-    #enter_loop(numRounds, P_his, W, N, gamma, tau)
+    enter_loop(numRounds, P_his, W, N, gamma, tau, K)
 
 def create_c(startingWealth,agentCount, K):
     temp = []
@@ -28,7 +27,7 @@ def create_c(startingWealth,agentCount, K):
     temp[startingWealth-1] = agentCount
     return temp
 
-def enter_loop(numRounds, P_his, W, N, gamma, tau):
+def enter_loop(numRounds, P_his, W, N, gamma, tau, K):
     return ''
 
 def new_P():
