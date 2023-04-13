@@ -36,14 +36,14 @@ def new_P():
 def new_A(i, h, N, c, K):
     term1 = (h*c[i])/(2*N)
     term2 = 0
-    for a in range(i, K):
+    for a in range(i+1, K+1):
         term2 += c[a]
-    term2 = (h/N)*term2
+    term2 = term2*(h/N)
     return term1 + term2
 
 def new_B(h, N, i, c):
-    term1 = ((h\(2*N))*(((h^2)*((2*i)-1))-h))*c[i]
+    term1 = ((h/(2*N))*(((h^2)*((2*i)-1))-h))*c[i]
     term2 = 0
-    for a in range(0,i-1)
+
 
 main()
