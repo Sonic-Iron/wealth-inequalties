@@ -2,7 +2,7 @@ def main():
     N = agentCount = 2
 
 
-    numRounds = 100
+    numRounds = 1000
 
     startingWealth = 5
 
@@ -16,7 +16,7 @@ def main():
     c = create_c(startingWealth, agentCount, K)
     P_his.append(c)
     beta = 0.2
-    tau = 0
+    tau = 0.02
     P_his = enter_loop(numRounds, P_his, h, c, K, W, N, beta, tau)
 def create_c(startingWealth,agentCount, K):
     temp = []
