@@ -1,5 +1,5 @@
 def main():
-    agentCount = 32
+    agentCount = 64
 
     N = 32
 
@@ -9,10 +9,9 @@ def main():
 
 
     W = agentCount*startingWealth
-    K = agentCount*startingWealth
+    K = W - 1
 
-
-    h = W/K+1
+    h = W/(K+1)
 
     P_his = []
     P_his.append(create_c(startingWealth, agentCount, K))
@@ -28,16 +27,23 @@ def create_c(startingWealth,agentCount, K):
     return temp
 
 def enter_loop(numRounds, P_his, W, N, gamma, tau, K):
-    return ''
+    for i in range(0, K-1):
+        pass
 
 def new_P():
     return ''
 
-def new_A(i, h, N, c,):
-    term1 = (h*c[i+1])
-    return
+def new_A(i, h, N, c, K):
+    term1 = (h*c[i])/(2*N)
+    term2 = 0
+    for a in range(i, K-1):
+        term2 += c[a]
+    term2 = (h/N)*term2
+    return term1 + term2
 
-def new_B():
-    return ''
+def new_B(h, N, i, c):
+    term1 = ((h\(2*N))*(((h^2)*((2*i)-1))-h))*c[i]
+    term2 = 0
+    for a in range(0,i-1)
 
 main()
