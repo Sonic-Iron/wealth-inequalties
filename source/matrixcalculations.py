@@ -21,9 +21,9 @@ def main():
 
 def create_c(startingWealth,agentCount, K):
     temp = []
-    for _ in range(K):
+    for _ in range(K+1):
         temp.append(0)
-    temp[startingWealth-1] = agentCount
+    temp[startingWealth] = agentCount
     return temp
 
 def enter_loop(numRounds, P_his, W, N, gamma, tau, K):
@@ -36,7 +36,7 @@ def new_P():
 def new_A(i, h, N, c, K):
     term1 = (h*c[i])/(2*N)
     term2 = 0
-    for a in range(i, K-1):
+    for a in range(i, K):
         term2 += c[a]
     term2 = (h/N)*term2
     return term1 + term2
