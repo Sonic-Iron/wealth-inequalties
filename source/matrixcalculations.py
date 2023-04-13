@@ -1,10 +1,9 @@
 def main():
     N = agentCount = 2
 
-
     numRounds = 1000
 
-    startingWealth = 5
+    startingWealth = 10
 
 
     W = agentCount*startingWealth
