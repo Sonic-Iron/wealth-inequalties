@@ -35,11 +35,13 @@ def next_c(h, N, c, K, W, N, beta, tau):
     old_c = c
     new_c = c
     for i in range(1, K+1):
-        new_c[i]= new_P(i, h, N, old_c, K, W, N, beta, tau)
+        new_c[i]= new_P(i, h, N, old_c, K, W, beta, tau)
     return new_c
-def new_P(i, h, N, c, K, W, N, beta, tau):
-    term1 = (1 - ((2/(h^2))*(beta^2)*(((i*h)^2)/2)))
-    return ''
+def new_P(i, h, N, c, K, W, beta, tau):
+    term1 = (1 - ((2/(h^2))*(beta^2)*(((((i*h)^2)/2)*new_A(i, h, N, c, K))+new_B(h, N, i, c))))*c[i]
+    term2 = (1/(2*(h^2)))*((2*(beta^2)*((((((i+1)*h)^2)/2)*new_A((i+1), h, N, c, K))+new_B(h, N, (i+1), c))) + (h*tau*((W/N)-((i+1)*h))))*c[i+1]
+    term3 = (1/(2*(h^2)))*((2*(beta^2)*((((((i-1)*h)^2)/2)*new_A((i-1), h, N, c, K))+new_B(h, N, (i-1), c))) - (h*tau*((W/N)-((i-1)*h))))*c[i-1]
+    return term1 + term2 + term3
 
 def new_A(i, h, N, c, K):
     term1 = (h*c[i])/(2*N)
