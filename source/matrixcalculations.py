@@ -29,15 +29,14 @@ def create_c(startingWealth,agentCount, K):
     return temp
 def enter_loop(numRounds, P_his, h, c, K, W, N, beta, tau):
     for _ in range(numRounds):
-        P_his.append(next_c(h, c, K, W, N, beta, tau))
+        P_his.append(c)
+        c = next_c(h, c, K, W, N, beta, tau)
     return P_his
 def next_c(h, c, K, W, N, beta, tau):
-    old_c = c
-    new_c = c
+    new_c = [0] * len(c)
     for i in range(1, K+1):
-        new_c[i] = new_P(i, h, N, old_c, K, W, beta, tau)
-        print(new_c[i-1], new_c[i], new_c[i+1])
-        time.sleep(1)
+        new_c[i] = new_P(i, h, N, c, K, W, beta, tau)
+    print(new_c)
     return new_c
 def new_P(i, h, N, c, K, W, beta, tau):
     term1 = (1 - ((2/(h**2))*(beta**2)*(((((i*h)**2)/2)*new_A(i, h, N, c, K))+new_B(h, N, i, c))))*c[i]
