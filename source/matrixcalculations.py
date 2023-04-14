@@ -4,7 +4,7 @@ import time
 def main():
     N = agentCount = 2
 
-    numRounds = 1000
+    numRounds = 10000
 
     startingWealth = 5
 
