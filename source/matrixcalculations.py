@@ -2,9 +2,9 @@ import time
 
 
 def main():
-    N = agentCount = 2
+    N = agentCount = 4
 
-    numRounds = 10000
+    numRounds = 1000
 
     startingWealth = 5
 
