@@ -57,4 +57,5 @@ def new_B(h, N, i, c):
         term2 += ((4*(h**2))-(2*h))*c[n]
     term2 = term2*(h/(2*N))
     return term1 + term2
+
 main()
