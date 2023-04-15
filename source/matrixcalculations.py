@@ -1,37 +1,33 @@
-import time
+from GameInstance import generate_gini_coefficient
 
 
 def main():
     N = agentCount = 4
-
     numRounds = 1000
-
     startingWealth = 5
-
-
     W = agentCount*startingWealth
     K = W - 1
-
     h = W/(K+1)
-
     P_his = []
     c = create_c(startingWealth, agentCount, K)
     P_his.append(c)
     beta = 0.2
     tau = 0.0
-    P_his = enter_loop(numRounds, P_his, h, c, K, W, N, beta, tau)
+    P_his, G_his = enter_loop(startingWealth, numRounds, P_his, h, c, K, W, N, beta, tau)
+    print(G_his)
+
 def create_c(startingWealth,agentCount, K):
-    temp = []
-    for _ in range(K+2):
-        temp.append(0)
+    temp = [0]*(K+2)
     temp[startingWealth] = agentCount
     print(temp)
     return temp
-def enter_loop(numRounds, P_his, h, c, K, W, N, beta, tau):
-    for _ in range(numRounds):
+def enter_loop(startingWealth, numRounds, P_his, h, c, K, W, N, beta, tau):
+    G_his = ''
+    for num in range(numRounds):
+        G_his += '('+str(num)+','+str(generate_gini_coefficient(startingWealth, c))+')'
         P_his.append(c)
         c = next_c(h, c, K, W, N, beta, tau)
-    return P_his
+    return P_his, G_his
 def next_c(h, c, K, W, N, beta, tau):
     new_c = [0] * len(c)
     for i in range(1, K+1):
