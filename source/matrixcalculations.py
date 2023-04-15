@@ -14,7 +14,6 @@ def main():
     beta = 0.2
     tau = 0.0
     P_his, G_his = enter_loop(startingWealth, numRounds, P_his, h, c, K, W, N, beta, tau)
-    print(G_his)
 
 def create_c(startingWealth,agentCount, K):
     temp = [0]*(K+2)
