@@ -1,12 +1,12 @@
 from GameInstance import generate_gini_coefficient
-
+from decimal import Decimal
 
 def main():
     N = agentCount = 4
     numRounds = 1000
-    startingWealth = 5
+    startingWealth = 10
     W = agentCount*startingWealth
-    K = W - 1
+    K = 10
     h = W/(K+1)
     P_his = []
     c = create_c(startingWealth, agentCount, K)
@@ -31,12 +31,22 @@ def next_c(h, c, K, W, N, beta, tau):
     new_c = [0] * len(c)
     for i in range(1, K+1):
         new_c[i] = new_P(i, h, N, c, K, W, beta, tau)
-    print(new_c)
+    print(sum(new_c), new_c)
     return new_c
 def new_P(i, h, N, c, K, W, beta, tau):
-    term1 = (1 - ((2/(h**2))*(beta**2)*(((((i*h)**2)/2)*new_A(i, h, N, c, K))+new_B(h, N, i, c))))*c[i]
-    term2 = (1/(2*(h**2)))*((2*(beta**2)*((((((i+1)*h)**2)/2)*new_A((i+1), h, N, c, K))+new_B(h, N, (i+1), c))) - (h*tau*((W/N)-((i+1)*h))))*c[i+1]
+    constant_hb = (2/(h**2))*(beta**2)
+    term1a = new_A(i, h, N, c, K)
+    term1b = new_B(h, N, i, c)
+    ih_squ_div2 = ((i*h)**2)/2
+    term1 = (1 - (constant_hb*((ih_squ_div2*term1a)+term1b)))*c[i]
+    assert term1 >= 0
+    term2newa = new_A((i+1), h, N, c, K)
+    term2newb = new_B(h, N, (i-1), c)
+    term2 = (1/(2*(h**2)))*((2*(beta**2)*((((((i+1)*h)**2)/2)*term2newa)+term2newb)) - (h*tau*((W/N)-((i+1)*h))))*c[i+1]
+    #assert term2 < 4
+
     term3 = (1/(2*(h**2)))*((2*(beta**2)*((((((i-1)*h)**2)/2)*new_A((i-1), h, N, c, K))+new_B(h, N, (i-1), c))) + (h*tau*((W/N)-((i-1)*h))))*c[i-1]
+    #assert term3 < 4
     return term1 + term2 + term3
 def new_A(i, h, N, c, K):
     term1 = (h*c[i])/(2*N)
@@ -46,11 +56,15 @@ def new_A(i, h, N, c, K):
     term2 = term2*(h/N)
     return term1 + term2
 def new_B(h, N, i, c):
-    term1 = ((h/(2*N))*(((h**2)*((2*i)-1))-h))*c[i]
+
+    h_over_2N = h/(2*N)
+    h_squ_mult_2i_minus1 = (h**2)*((2*i)-1)
+
+    term1 = h_over_2N*(h_squ_mult_2i_minus1-h)*c[i]
     term2 = 0
     for n in range(1, i):
         term2 += ((4*(h**2))-(2*h))*c[n]
-    term2 = term2*(h/(2*N))
+    term2 = term2*h_over_2N
     return term1 + term2
 
 main()
