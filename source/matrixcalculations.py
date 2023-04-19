@@ -43,10 +43,7 @@ def new_P(i, h, N, c, K, W, beta, tau):
     term2newa = new_A((i+1), h, N, c, K)
     term2newb = new_B(h, N, (i-1), c)
     term2 = (1/(2*(h**2)))*((2*(beta**2)*((((((i+1)*h)**2)/2)*term2newa)+term2newb)) - (h*tau*((W/N)-((i+1)*h))))*c[i+1]
-    #assert term2 < 4
-
     term3 = (1/(2*(h**2)))*((2*(beta**2)*((((((i-1)*h)**2)/2)*new_A((i-1), h, N, c, K))+new_B(h, N, (i-1), c))) + (h*tau*((W/N)-((i-1)*h))))*c[i-1]
-    #assert term3 < 4
     return term1 + term2 + term3
 def new_A(i, h, N, c, K):
     term1 = (h*c[i])/(2*N)
