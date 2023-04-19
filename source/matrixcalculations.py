@@ -53,15 +53,17 @@ def new_A(i, h, N, c, K):
     term2 = term2*(h/N)
     return term1 + term2
 def new_B(h, N, i, c):
-
     h_over_2N = h/(2*N)
-    h_squ_mult_2i_minus1 = (h**2)*((2*i)-1)
 
-    term1 = h_over_2N*(h_squ_mult_2i_minus1-h)*c[i]
+    term1 = (4*((i*h)**3)) - (4*(((i-1)*h)**3))
+    term1 *= term1*((i-1)*h)
+    term1 -= 3 * ((i * h) ** 4)
+    term1 += 3 * (((i-1) * h) ** 4)
+    term1 *= 1/(24*h)
     term2 = 0
     for n in range(1, i):
         term2 += ((4*(h**2))-(2*h))*c[n]
-    term2 = term2*h_over_2N
-    return term1 + term2
+    term2 = term2
+    return (term1 + term2)*h_over_2N
 
 main()
