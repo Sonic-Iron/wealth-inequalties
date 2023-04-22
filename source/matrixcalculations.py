@@ -62,7 +62,7 @@ def new_B(h, N, i, c):
     term1 *= 1/(24*h)
     term2 = 0
     for n in range(1, i):
-        term2 +=
+        term2 += 0
     term2 = term2
     return (term1 + term2)*h_over_2N
 
