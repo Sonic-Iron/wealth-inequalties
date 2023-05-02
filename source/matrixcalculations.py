@@ -4,9 +4,9 @@ from decimal import Decimal
 def main():
     N = agentCount = 4
     numRounds = 1000
-    startingWealth = 10
+    startingWealth = 5
     W = agentCount*startingWealth
-    K = 10
+    K = W-1
     h = W/(K+1)
     P_his = []
     c = create_c(startingWealth, agentCount, K)
