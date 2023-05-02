@@ -61,7 +61,7 @@ def new_B(h, N, i, c):
     term2 = 0
     for n in range(1, i):
         term2 += 6*(i**3) - 9*(i**2) + 9*i - 1
-    term2 *= 4
+    term2 *= -4
     return (term1 + term2)*h_constant
 
 
