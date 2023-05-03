@@ -94,7 +94,7 @@ def valid_check(num_players, num_rounds, large_wager, small_wager, large_bias_co
     if not 0 <= small_wager <= 1:
         warnings.warn("Small Wager needs to be between 0 and 1")
         small_wager = np.clip(small_wager, 0, 1)
-    if not -0.5 <= large_bias_coefficient <= 0.5: #TODO: change this to be dynamic
+    if not -0.5 <= large_bias_coefficient <= 0.5:
         warnings.warn("The large bias needs to be between -0.5 and 0.5")
         large_bias = np.clip(large_bias_coefficient, -0.5, 0.5)
     if not 0 <= tax_rate <= 1:
