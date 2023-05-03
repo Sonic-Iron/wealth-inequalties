@@ -2,7 +2,7 @@ from GameInstance import generate_gini_coefficient
 from decimal import Decimal
 
 def main():
-    N = agentCount = 2
+    N = agentCount = 4
     numRounds = 1000
     startingWealth = 5
     W = agentCount*startingWealth
@@ -52,16 +52,25 @@ def new_A(i, h, N, c, K):
     term2 = term2*(h/N)
     return term1 + term2
 def new_B(h, N, i, c):
-    h_constant = (h**3)/(24*N)
+    h_constant = 1/(24*N*h)
     term1 = 6*(i**2)
     term1 -= (4*i)
     term1 += 1
+    term1 *= h**4
     term1 *= c[i]
 
     term2 = 0
     for n in range(1, i):
-        term2 += 6*(i**3) - 9*(i**2) + 9*i - 1
-    term2 *= -4
+        temp = 0
+        temp += 2*(n**2) - 12*(n**3) - 18*(n**2) - 1
+        temp *= -1
+        temp *= h**4
+        temp -= 12*(h**3)*(n**4)
+        temp -= 18 * (h ** 2) * (n ** 4)
+        temp -= 12 * h * (n ** 4)
+        temp -= 3*(n**4)
+        temp *= c[n]
+        term2 += temp
     return (term1 + term2)*h_constant
 
 
