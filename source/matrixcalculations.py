@@ -61,7 +61,6 @@ def new_B(h, N, i, c):
         term2 += (6*(n**2) + 1)*c[n]
     return (term1 + term2)*h_constant
 
-
 def calculate_gini():
     return ''
 
