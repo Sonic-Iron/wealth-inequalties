@@ -2,9 +2,9 @@ from GameInstance import generate_gini_coefficient
 from decimal import Decimal
 
 def main():
-    N = agentCount = 32
+    N = agentCount = 10
     numRounds = 1000
-    startingWealth = 5
+    startingWealth = 10
     W = agentCount*startingWealth
     K = W-1
     h = W/(K+1)
@@ -14,6 +14,10 @@ def main():
     beta = 0.2
     tau = 0.0
     P_his, G_his = enter_loop(startingWealth, numRounds, P_his, h, c, K, W, N, beta, tau)
+    P_final = ''
+    for i in range(len(P_his[0])):
+        P_final += '('+str(i)+','+str(P_his[-1][i])+')'
+    print(P_final)
 
 def create_c(startingWealth,agentCount, K):
     temp = [0]*(K+2)
@@ -31,6 +35,8 @@ def next_c(h, c, K, W, N, beta, tau):
     new_c = [0] * len(c)
     for i in range(1, K+1):
         new_c[i] = new_P(i, h, N, c, K, W, beta, tau)
+    for a in range(len(new_c)):
+        new_c[a] = abs(N * new_c[a]/sum(new_c))
     print(sum(new_c), new_c)
     return new_c
 def new_P(i, h, N, c, K, W, beta, tau):
@@ -60,6 +66,7 @@ def new_B(h, N, i, c):
     for n in range(1, i):
         term2 += (6*(n**2) + 1)*c[n]
     return (term1 + term2)*h_constant
+
 
 def calculate_gini():
     return ''
