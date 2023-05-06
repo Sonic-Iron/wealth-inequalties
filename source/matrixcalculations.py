@@ -2,33 +2,28 @@ from GameInstance import generate_gini_coefficient
 from decimal import Decimal
 
 def main():
-    N = agentCount = 128
-    numRounds = 1000
-    startingWealth = 5
+    N = agentCount = 32
+    numRounds = 100000
+    startingWealth = 3
     W = agentCount*startingWealth
-    K = (W-1)
+    K = int((W-1))
     h = W/(K+1)
     P_his = []
     c = create_c(startingWealth, agentCount, K)
-    P_his.append(c)
     beta = 0.2
     tau = 0.0
     P_his, G_his = enter_loop(startingWealth, numRounds, P_his, h, c, K, W, N, beta, tau)
-    P_final = ''
-    for i in range(len(P_his[0])):
-        P_final += '('+str(i)+','+str(P_his[-1][i])+')'
-    print(P_final)
 
 def create_c(startingWealth,agentCount, K):
     temp = [0]*(K+2)
     temp[startingWealth] = agentCount
-    print(temp)
     return temp
 def enter_loop(startingWealth, numRounds, P_his, h, c, K, W, N, beta, tau):
     G_his = ''
+    P_his = ''
     for num in range(numRounds):
-        G_his += '('+str(num)+','+str(generate_gini_coefficient(startingWealth, c))+')'
-        P_his.append(c)
+        G_his += '('+str(num)+','+str(gen_gini_matrix(W, c, h))+')'
+        P_his += '('+str(num)+','+str(c)+')'
         c = next_c(h, c, K, W, N, beta, tau)
     return P_his, G_his
 def next_c(h, c, K, W, N, beta, tau):
@@ -37,7 +32,7 @@ def next_c(h, c, K, W, N, beta, tau):
         new_c[i] = new_P(i, h, N, c, K, W, beta, tau)
     for a in range(len(new_c)):
         new_c[a] = N * new_c[a]/sum(new_c)
-    print(sum(new_c), new_c)
+    print(sum(new_c), sum([p*c[p] for p in range(len(new_c))]), new_c)
     return new_c
 def new_P(i, h, N, c, K, W, beta, tau):
     constant_hb = (2/(h**2))*(beta**2)
@@ -67,8 +62,22 @@ def new_B(h, N, i, c):
         term2 += (6*(n**2) + 1)*c[n]
     return (term1 + term2)*h_constant
 
+def gen_gini_matrix(W, c, h):
+    area = 0
+    total_wealth = sum([p*c[p] for p in range(len(c))])
 
-def calculate_gini():
-    return ''
+    prop_pop_pre = 0
+    prop_wealth = 0
+    for popnum in range(len(c)):
+        popnum_pop = c[popnum]/sum(c) - prop_pop_pre
+        prop_pop_pre += c[popnum]/sum(c)
+
+
+
+
+
+
+    return area
+
 
 main()
