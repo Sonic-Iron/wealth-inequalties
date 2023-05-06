@@ -71,5 +71,4 @@ def new_B(h, N, i, c):
 def calculate_gini():
     return ''
 
-
 main()
